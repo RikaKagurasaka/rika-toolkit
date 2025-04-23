@@ -1,0 +1,8 @@
+select {
+    @apply rounded-md px-2 py-1;
+}
+
+a[href^="https://"] {
+    @apply text-blue-500 underline-blue underline-offset-4 underline after:content-['_↗'] after:text-xs;
+}
+
