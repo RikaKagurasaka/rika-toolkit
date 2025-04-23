@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const mainNoteLevel = useLocalStorage("chord.mainNoteLevel", 0);
-const selectedRootCoord = ref({ x: 0, y: 0 });
+const selectedRootCoord = ref({ x: 0, y: 0, w: 0 });
 const gridSizing = {
   cellSize: 64,
   gap: 8,
@@ -10,7 +10,7 @@ const chord = ref<NoteInChord[]>([]);
 const unifiedChord = useUnifiedChord(chord, selectedRootCoord, mainNoteLevel);
 const userClicked = ref(false);
 const handleClick = (x: number, y: number) => {
-  selectedRootCoord.value = { x, y };
+  selectedRootCoord.value = { ...selectedRootCoord.value, x, y };
   userClicked.value = true;
 };
 const handleChordChange = async (newChord: NoteInChord[]) => {
@@ -52,6 +52,7 @@ watchDeep(unifiedChord, () => {
         v-model="NOTES[coords2level(selectedRootCoord.x, selectedRootCoord.y)]"
         readonly
       />
+      <ChordOctaveSelector v-model="selectedRootCoord.w" />
       <ChordSelector @change="handleChordChange" />
       <button
         @click="muted = !muted"
@@ -77,9 +78,30 @@ watchDeep(unifiedChord, () => {
         >
         处出现的表格制作的。传统五度圈只考虑了三倍音，我们不妨尝试引入五倍音，构造一个二维的「五三度网格」。
       </p>
-      <p>
-        根据理论，「一维」是纯八度（二倍音），「二维」是纯五度（三倍音），「三维」是大三度（五倍音）。由于我们一般忽略纯八度，所以图中呈现的只有「二维」和「三维」。
-      </p>
+      <p>根据理论：</p>
+      <ol>
+        <li>
+          「零维」<ChordLamplightIcon class="inline-flex!" />是纯一度（一倍音）
+        </li>
+        <li>
+          「一维」<ChordLamplightIcon
+            class="inline-flex!"
+            :w="1"
+          />是纯八度（二倍音）
+        </li>
+        <li>
+          「二维」<ChordLamplightIcon
+            class="inline-flex!"
+            :x="1"
+          />是纯五度（三倍音）
+        </li>
+        <li>
+          「三维」<ChordLamplightIcon
+            class="inline-flex!"
+            :y="1"
+          />是大三度（五倍音）
+        </li>
+      </ol>
       <p>
         横向为三倍音，如果只看一行，和传统五度圈是类似的。相邻的两个音成纯五度关系。
       </p>
@@ -90,12 +112,6 @@ watchDeep(unifiedChord, () => {
       <p>
         你可以通过下拉框选择不同的和弦，点击网格选择根音，浏览和弦的在网格上的分布。
       </p>
-      <p>根据理论，一个和弦听起来「稳定」的充要条件是：</p>
-      <ol>
-        <li>组成这个和弦的音在网格上四连通</li>
-        <li>和弦的根音位于所有音的最左侧、最下侧</li>
-        <li>各音需要被放在合适的八度上</li>
-      </ol>
       <br />
       <p class="text-gray-500">
         又：由于这个网格左右联通，上下联通，所以如果类比五度圈的话，从拓扑上讲，这个图应该叫「五三度甜甜圈」。

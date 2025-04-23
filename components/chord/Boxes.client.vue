@@ -52,7 +52,7 @@ watch(
       class="text-blue-800 rotate-90 text-xs absolute top-1 left-1"
     />
     <ChordLamplightIcon
-      v-if="box.note.w == 1"
+      v-if="box.note.w !== 0"
       :w="box.note.w"
       class="absolute top-1 right-1 text-xs"
     />

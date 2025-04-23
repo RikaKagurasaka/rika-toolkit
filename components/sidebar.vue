@@ -23,7 +23,7 @@
 <style scoped>
 .sidebar {
   @apply bg-gray-100 dark:bg-gray-900 h-full overflow-y-auto shadow-lg;
-  @apply w-0 md:w-64 lg:w-80;
+  @apply w-0 md:w-64;
 
   & > ul {
     @apply list-none p-4 m-0;

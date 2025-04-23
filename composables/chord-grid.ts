@@ -1,4 +1,4 @@
-export function useUnifiedChord(chord: MaybeRef<NoteInChord[]>, rootCoord: MaybeRef<{ x: number, y: number }>, mainNoteLevel: MaybeRef<number>) {
+export function useUnifiedChord(chord: MaybeRef<NoteInChord[]>, rootCoord: MaybeRef<{ x: number, y: number, w: number }>, mainNoteLevel: MaybeRef<number>) {
     return computed(() => {
         let rootLevel = coords2level(toValue(rootCoord).x, toValue(rootCoord).y, toValue(mainNoteLevel));
         const result = [{ dw: 0, dx: 0, dy: 0 }, ...toValue(chord)].map((note) => {
@@ -7,7 +7,7 @@ export function useUnifiedChord(chord: MaybeRef<NoteInChord[]>, rootCoord: Maybe
             x = ((x + 5 + 12) % 12) - 5;
             y = ((y + 1 + 3) % 3) - 1;
             let level = coords2level(x, y, toValue(mainNoteLevel));
-            let w = note.dw || 0;
+            let w = note.dw || 0 + toValue(rootCoord).w;
             if (level < rootLevel) {
                 w += 1;
             }
