@@ -13,10 +13,6 @@
         <Icon name="mdi:music" />
         <NuxtLink to="/chord-grid">和弦网格</NuxtLink>
       </li>
-      <li>
-        <Icon name="mdi:piano" />
-        <NuxtLink to="/brso-keyname-gen">BRSO键名生成器</NuxtLink>
-      </li>
     </ul>
   </div>
 </template>
