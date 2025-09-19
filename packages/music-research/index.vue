@@ -2,7 +2,7 @@
 import { Transition } from "vue";
 import OvertuneConfig from "./components/OvertuneConfig.vue";
 import RxConfig from "./components/RxConfig.vue";
-import CompCurve from "./components/compCurve.vue";
+import CompCurve from "./components/CompCurve.vue";
 import { useConfig } from "./composables/store";
 
 const { collapseTopPanel } = useConfig();
