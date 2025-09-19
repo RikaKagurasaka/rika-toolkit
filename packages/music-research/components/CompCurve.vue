@@ -3,7 +3,7 @@ import { ref } from "vue";
 import { usePlot } from "../composables/compCurve";
 import SavedChord from "./comp/SavedChord.vue";
 import Control from "./comp/Control.vue";
-import { useConfig } from "../composables/store";
+import { useConfig } from "../composables/config";
 
 const svg = ref<SVGSVGElement | null>(null);
 const modes = { interval: "音程", chord: "和弦", conchord: "和声" };
@@ -15,6 +15,11 @@ const snappingOptions = {
   endpoints: "端点",
   edo: "平均律",
 };
+const ticksOptions = {
+  note: "音名",
+  edo: "平均律",
+  cents: "音分",
+};
 const {
   edo,
   negativeX,
@@ -23,6 +28,7 @@ const {
   snapping,
   mainFrequency,
   volume,
+  xAxisTickType,
 } = useConfig();
 const { snappedMouseCent, addedNotes, play, stop, savedChords, data, mode } =
   usePlot({
@@ -89,7 +95,7 @@ function myPlay() {
               {{ label }}
             </button>
           </div>
-          <span class="text-sm">镜像</span>
+          <span class="text-sm">低音</span>
           <div class="flex items-center btn-group">
             <button
               class=""
@@ -100,6 +106,21 @@ function myPlay() {
               @click="negativeX = !negativeX"
             >
               {{ negativeX ? "开" : "关" }}
+            </button>
+          </div>
+          <span class="text-sm">横轴标签</span>
+          <div class="flex items-center btn-group">
+            <button
+              v-for="(label, key) in ticksOptions"
+              :key="key"
+              :class="{
+                'btn-primary': xAxisTickType === key,
+                'btn-outline': xAxisTickType !== key,
+              }"
+              class="text-xs p-1 w-fit whitespace-nowrap"
+              @click="xAxisTickType = key"
+            >
+              {{ label }}
             </button>
           </div>
         </div>

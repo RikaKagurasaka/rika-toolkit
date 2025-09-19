@@ -1,7 +1,7 @@
 import { ref } from "vue";
 import Mexp from "math-expression-evaluator";
 import * as Tone from "tone";
-import { useConfig } from "./store";
+import { useConfig } from "./config";
 
 const { formulaCent, formulaIntensity, maxI } = useConfig();
 const mexp = new Mexp();

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import * as d3 from "d3";
-import { useConfig } from "../composables/store";
+import { useConfig } from "../composables/config";
 import { useElementBounding, watchDeep } from "@vueuse/core";
 import { overtuneData } from "../composables/overtune";
 const svg = ref<SVGSVGElement | null>(null);

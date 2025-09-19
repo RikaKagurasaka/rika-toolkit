@@ -19,6 +19,6 @@ const sidebarActive = useVModel(props, "sidebarActive");
 
 <style scoped>
 .navbar {
-  @apply h-12 bg-gray-100 dark:bg-gray-900 flex items-center px-4 gap-4 shadow-md;
+  @apply h-12 bg-gray-100 flex items-center px-4 gap-4 shadow-md;
 }
 </style>

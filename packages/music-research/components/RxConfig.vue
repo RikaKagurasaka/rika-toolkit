@@ -3,7 +3,7 @@ import { onMounted, ref } from "vue";
 import * as d3 from "d3";
 import { curvePoints } from "../composables/rxCurve";
 import { useElementBounding, watchDeep } from "@vueuse/core";
-import { useConfig } from "../composables/store";
+import { useConfig } from "../composables/config";
 const svg = ref<SVGSVGElement | null>(null);
 const { width, height } = useElementBounding(svg);
 const { r, t } = useConfig();

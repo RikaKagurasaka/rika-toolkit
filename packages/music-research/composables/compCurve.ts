@@ -5,7 +5,7 @@ import { type MaybeElementRef, computedAsync } from "@vueuse/core";
 import { toRefs } from "@vueuse/core";
 import * as Tone from "tone";
 import { createMusicResearchGPUCompute } from '../workers/calculate-gpu';
-import { useConfig } from "./store";
+import { useConfig } from "./config";
 const gpuCompute = await createMusicResearchGPUCompute();
 if (!gpuCompute) {
     alert("WebGPU 不支持或初始化失败，无法使用计算功能");
@@ -23,7 +23,7 @@ export function usePlot({
     // =========== DEFINE CONSTANTS AND REFS ===========
     const {
         edo, negativeX, maxX, snappingDistance, snapping, mainFrequency, volume,
-        mode, addedNotes, savedChords,
+        mode, addedNotes, savedChords, xAxisTickType
     } = useConfig();
     const minX = computed(() => negativeX.value ? -maxX.value : 0);
 
@@ -164,6 +164,80 @@ export function usePlot({
         const s = d3.select(svg);
         const [xx, yy] = [toValue(x), toValue(y)];
 
+        // ============================================
+        function plotGrid() {
+            const g = s
+                .selectAll("g.grid-lines")
+                .data([null])
+                .join("g")
+                .attr("class", "grid-lines");
+            const gridInterval = 1200 / edo;
+            let data = new Array(Math.floor((maxX) / gridInterval) + 2)
+                .fill(0)
+                .map((_, i) => i * gridInterval);
+            if (negativeX.value) {
+                data = [...data.map(d => -d).reverse(), ...data];
+                // remove duplicates
+                data = Array.from(new Set(data)).sort((a, b) => a - b);
+            }
+            const gridLines = g.selectAll<SVGLineElement, number>("line.grid-line")
+                .data(data)
+                .join("line")
+                .attr("class", "grid-line")
+                .attr("x1", (d) => xx(d))
+                .attr("x2", (d) => xx(d))
+                .attr("y1", yy(0))
+                .attr("y2", yy(toValue(maxY)))
+                .attr("stroke", "#ccc")
+                .attr("stroke-width", (d) => (d % 1200 == 0 ? 3 : 1))
+
+            // only for 12edo draw note names
+            const ticks = (() => {
+                switch (toValue(xAxisTickType)) {
+                    case 'note':
+                        const noteNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+                        const baseFreq = toValue(mainFrequency)
+                        const freq2midiLvl = (f: number) => 69 + 12 * Math.log2(f / 440);
+                        const midiLvl2NoteNameWithOctave = (lvl: number) => {
+                            const note = (Math.round(lvl) % 12 + 12) % 12;
+                            const octave = Math.floor(Math.round(lvl) / 12) - 1;
+                            return noteNames[note]! + octave;
+                        }
+                        const centsRange = [minX, maxX];
+                        const centerLvl = freq2midiLvl(baseFreq);
+                        const midiLvlRange = centsRange.map(c => freq2midiLvl(baseFreq * Math.pow(2, c / 1200)));
+                        const noteNamesInRange = d3.range(Math.floor(midiLvlRange[0]!), Math.ceil(midiLvlRange[1]!) + 1).map(lvl => ({
+                            x: (lvl - centerLvl) * (100),
+                            name: midiLvl2NoteNameWithOctave(lvl)
+                        }));
+                        return noteNamesInRange;
+                    case 'edo':
+                        return data.map((d) => ({ x: d, name: Math.round(((d % 1200 + 1200) % 1200) / (1200 / edo)) + "" }));
+                    case 'cents':
+                        return data.map((d) => ({ x: d, name: Math.round(d) + "" }));
+
+                }
+            })();
+            console.log(ticks);
+
+            g.selectAll<SVGTextElement, { x: number; name: string }>("text.grid-text")
+                .data(ticks)
+                .join("text")
+                .attr("class", "grid-text")
+                .attr("text-anchor", "middle")
+                .attr("font-size", 10)
+                .attr("opacity", 0.7)
+                .style("user-select", "none")
+                .attr("x", d => xx(d.x))
+                .attr("y", (d, i) => yy(toValue(minY)) -
+                    (ticks.length < 30 ? 0 : (i % Math.floor((ticks.length) / 30)) * 10)
+                )
+                .text(d => d.name);
+            return { gridLines };
+
+        }
+        const { gridLines } = plotGrid();
+
         //============================================
         function plotCurve() {
             const line = d3
@@ -184,53 +258,6 @@ export function usePlot({
             return { curve }
         }
         const { curve } = plotCurve();
-        // ============================================
-        function plotGrid() {
-            const g = s
-                .selectAll("g.grid-lines")
-                .data([null])
-                .join("g")
-                .attr("class", "grid-lines");
-            const gridInterval = 1200 / edo;
-            let data = new Array(Math.floor((maxX) / gridInterval) + 2)
-                .fill(0)
-                .map((_, i) => i * gridInterval);
-            if (negativeX.value) {
-                data = [...data.map(d => -d).reverse(), ...data];
-                // remove duplicates
-                data = Array.from(new Set(data)).sort((a, b) => a - b);
-            }
-            const gridLines = g.selectAll<SVGLineElement, number>("line.grid-line")
-                .data(data,)
-                .join("line")
-                .attr("class", "grid-line")
-                .attr("x1", (d) => xx(d))
-                .attr("x2", (d) => xx(d))
-                .attr("y1", yy(0))
-                .attr("y2", yy(toValue(maxY)))
-                .attr("stroke", "#ccc")
-                .attr("stroke-width", (d) => (d % 1200 == 0 ? 3 : 1))
-
-            // only for 12edo draw note names
-            const noteNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
-            const texts = g.selectAll<SVGTextElement, { x: number; name: string }>("text.grid-text")
-                .data(
-                    edo !== 12 ? [] :
-                        data.map(d => ({ x: d, name: noteNames[(Math.round(d / (1200 / edo)) % edo + edo) % edo]! }))
-                )
-                .join("text")
-                .attr("class", "grid-text")
-                .attr("text-anchor", "middle")
-                .attr("font-size", 10)
-                .attr("opacity", 0.7)
-                .style("user-select", "none")
-                .attr("x", d => xx(d.x))
-                .attr("y", yy(toValue(minY)))
-                .text(d => d.name);
-
-            return { gridLines };
-        }
-        const { gridLines } = plotGrid();
         // ============================================
         function plotCursor() {
             const g = s.selectAll<SVGLineElement, null>("g.cursor-group").data([null]).join("g").attr("class", "cursor-group");
@@ -369,7 +396,7 @@ export function usePlot({
                 .attr("y1", d => yy(0))
                 .attr("x2", d => xx(d.x))
                 .attr("y2", d => yy(maxY.value))
-                .attr("stroke", "orange")
+                .attr("stroke", "darkgreen")
                 .attr("stroke-width", 1)
                 .attr("opacity", 0.5)
                 .attr("pointer-events", "none");
@@ -380,7 +407,7 @@ export function usePlot({
                 .attr("x", d => xx(d.x) - 2)
                 .attr("y", d => yy(maxY.value) + 8)
                 .attr("text-anchor", "end")
-                .attr("fill", "orange")
+                .attr("fill", "darkgreen")
                 .attr("font-size", 12)
                 .attr("pointer-events", "none")
                 .style("user-select", "none")
@@ -393,10 +420,7 @@ export function usePlot({
                 .attr("cx", d => xx(d.x))
                 .attr("cy", d => yy(d.y))
                 .attr("r", 2)
-                .attr("fill", "orange")
-                .attr("opacity", 0.5)
-                .attr("stroke", "orange")
-                .attr("stroke-width", 1)
+                .attr("fill", "darkgreen")
                 .attr("opacity", 0.5)
                 .attr("pointer-events", "none");
 
@@ -432,7 +456,7 @@ export function usePlot({
 
         for (const cent of notes) {
             const freq = mainFrequency.value * Math.pow(2, (cent || 0) / 1200);
-            synth.value?.triggerAttack(freq, "4n", volume.value - Math.log2(notes.length));
+            synth.value?.triggerAttack(freq, "4n", Math.max(volume.value - Math.log2(notes.length), 0));
         }
     }
 

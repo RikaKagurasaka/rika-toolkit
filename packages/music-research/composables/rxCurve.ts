@@ -1,6 +1,6 @@
 import { computed, reactive, ref } from 'vue'
 import { createSharedComposable } from "@vueuse/core"
-import { useConfig } from "./store";
+import { useConfig } from "./config";
 
 const { r, v, t, rm, resolution } = useConfig()
 

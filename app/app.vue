@@ -14,7 +14,7 @@ import { Analytics } from "@vercel/analytics/nuxt";
 
 <style>
 html {
-  @apply bg-gray-50 dark:bg-gray-900;
+  @apply bg-gray-50;
 }
 html,
 body {
@@ -25,7 +25,7 @@ h1 {
 }
 textarea,
 input {
-  @apply p-1 rounded-md border border-gray-300 dark:border-gray-700 max-w-screen-md font-mono;
+  @apply p-1 rounded-md border border-gray-300  max-w-screen-md font-mono;
   textarea {
     @apply h-20;
   }

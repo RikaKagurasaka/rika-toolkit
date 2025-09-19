@@ -12,6 +12,12 @@ const props = defineProps<{
   optionsSetValueTransform?: (value: number) => number;
 }>();
 const modelValue = useVModel(props, "value");
+const optionSetValue = (value: number) => {
+  if (props.optionsSetValueTransform) {
+    return props.optionsSetValueTransform(value);
+  }
+  return value;
+};
 </script>
 
 <template>
@@ -31,10 +37,12 @@ const modelValue = useVModel(props, "value");
       v-if="options?.length"
     >
       <button
-        @click="modelValue = optionsSetValueTransform ? optionsSetValueTransform(value) : value"
+        @click="modelValue = optionSetValue(value)"
         class=""
         v-for="value in options || []"
-        :class="value === modelValue ? 'btn-primary' : 'btn-outline'"
+        :class="
+          optionSetValue(value) === modelValue ? 'btn-primary' : 'btn-outline'
+        "
         :key="value"
       >
         {{ optionsLabel ? optionsLabel(value) : value }}

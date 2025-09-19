@@ -24,6 +24,7 @@ function _useConfig() {
         mode: 'interval' as 'interval' | 'chord' | 'conchord',
         addedNotes: [] as number[],
         savedChords: [] as number[][],
+        xAxisTickType: 'note' as 'note' | 'edo' | 'cents',
     })
     const overtuneConfig = useMergedLocalStorage('music-research-overtuneConfig', {
         formulaCent: "log2(i)",

@@ -6,8 +6,9 @@ export default defineConfig({
   transformers: [transformerDirectives()],
   shortcuts: {
     btn: "rounded-md px-4 py-2",
+    "btn-xs": "rounded-md px-1 py-0.5 text-sm",
     "btn-sm": "rounded-md px-2 py-1",
-    "btn-primary": "bg-blue-600 dark:bg-blue-400 text-white",
+    "btn-primary": "bg-blue-600 text-white",
   },
   theme: {
     colors: {
@@ -17,7 +18,6 @@ export default defineConfig({
       'chord-3d': '#17ab39',
       'chord-4d': '#aa88ee',
       'chord-5d': '#ffaa00',
-
     }
   }
 });
