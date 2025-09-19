@@ -1,0 +1,32 @@
+{
+  "name": "music-research",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.16.1",
+  "peerDependencies": {
+    "vue": "catalog:"
+  },
+  "dependencies": {
+    "@antv/g-webgpu": "catalog:",
+    "@nuxt/icon": "catalog:",
+    "@vueuse/core": "catalog:",
+    "@vueuse/motion": "catalog:",
+    "async-wait-until": "catalog:",
+    "d3": "catalog:",
+    "gpu.js": "catalog:",
+    "math-expression-evaluator": "catalog:",
+    "nuxt": "catalog:",
+    "tone": "catalog:"
+  },
+  "devDependencies": {
+    "@types/d3": "catalog:",
+    "@webgpu/types": "catalog:"
+  }
+}

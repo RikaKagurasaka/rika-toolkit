@@ -1,0 +1,1 @@
+export {default as WideDecoder} from './index.vue';

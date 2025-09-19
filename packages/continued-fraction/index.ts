@@ -1,0 +1,1 @@
+export {default as ContinuedFraction} from './index.vue';

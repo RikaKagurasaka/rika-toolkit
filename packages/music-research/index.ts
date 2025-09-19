@@ -1,0 +1,1 @@
+export {default as MusicResearch} from './index.vue';

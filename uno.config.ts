@@ -1,8 +1,8 @@
 // uno.config.ts
-import { defineConfig, presetWind3, transformerDirectives } from "unocss";
+import { defineConfig, presetIcons, presetWind3, transformerDirectives } from "unocss";
 
 export default defineConfig({
-  presets: [presetWind3()],
+  presets: [presetWind3(), presetIcons()],
   transformers: [transformerDirectives()],
   shortcuts: {
     btn: "rounded-md px-4 py-2",

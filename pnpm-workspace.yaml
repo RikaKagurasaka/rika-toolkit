@@ -1,4 +1,44 @@
+packages:
+  - packages/*
+
+catalog:
+  '@antv/g-webgpu': ^2.0.52
+  '@hypernym/nuxt-gsap': ^2.4.3
+  '@iconify-json/mdi': ^1.2.3
+  '@iconify-json/ph': ^1.2.2
+  '@nuxt/eslint': ^1.9.0
+  '@nuxt/fonts': ^0.11.4
+  '@nuxt/icon': 2.0.0
+  '@nuxt/image': ^1.11.0
+  '@types/d3': ^7.4.3
+  '@types/lodash': ^4.17.20
+  '@unocss/nuxt': ^66.5.1
+  '@unocss/reset': ^66.5.1
+  '@vueuse/core': 13.9.0
+  '@vueuse/motion': ^3.0.3
+  '@vueuse/nuxt': ^13.9.0
+  '@webgpu/types': ^0.1.65
+  async-wait-until: ^2.0.30
+  bignumber.js: ^9.3.1
+  chart.js: ^4.5.0
+  d3: ^7.9.0
+  eslint: ^9.35.0
+  fraction.js: ^5.3.4
+  gpu.js: ^2.16.0
+  gsap: ^3.13.0
+  katex: ^0.16.22
+  lodash: ^4.17.21
+  math-expression-evaluator: ^2.0.7
+  nuxt: 4.1.2
+  sass-embedded: ^1.92.1
+  tone: 15.1.22
+  unocss: ^66.5.1
+  vite: ^7.1.5
+  vue: ^3.5.21
+  vue-router: 4.5.1
+
 onlyBuiltDependencies:
   - '@parcel/watcher'
   - esbuild
   - sharp
+  - unrs-resolver
