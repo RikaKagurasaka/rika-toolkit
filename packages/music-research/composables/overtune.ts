@@ -57,6 +57,7 @@ export const overtuneData = computed(() => {
     }
     const sum = data.reduce((acc, cur) => acc + cur.intensity ** 2, 0);
     data.forEach(d => d.intensity /= sum);
+    console.log(data);
     return data;
 }) as ComputedRef<{ i: number; cent: number; intensity: number }[]>;
 

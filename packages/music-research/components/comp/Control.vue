@@ -21,9 +21,9 @@ const optionSetValue = (value: number) => {
 </script>
 
 <template>
-  <div class="grid grid-cols-2 gap-1 w-48">
+  <div class="grid grid-cols-2 w-48">
     <span>{{ label }}</span>
-    <input v-model.number="modelValue" type="number" class="input" />
+    <input v-model.number="modelValue" type="number" class="input text-sm" />
     <input
       type="range"
       :min="min"

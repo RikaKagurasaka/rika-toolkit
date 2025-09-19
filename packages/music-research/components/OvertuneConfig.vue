@@ -61,14 +61,14 @@ watchDeep(
 
 <template>
   <div>
-    <h2 class="text-lg font-bold mb-4">泛音列</h2>
-    <div class="flex gap-8 mb-4 items-start">
+    <h2 class="text-lg font-bold mb-2">泛音列</h2>
+    <div class="flex gap-8 mb-4 items-center">
       <div class="grid grid-cols-[8em_8em] gap-1 max-w-lg">
         <span>泛音数量</span>
         <input v-model.number="maxI" type="number" class="input" />
         <input
           type="range"
-          min="1"
+          min="2"
           max="20"
           step="1"
           v-model.number="maxI"

@@ -4,6 +4,7 @@ import * as d3 from "d3";
 import { curvePoints } from "../composables/rxCurve";
 import { useElementBounding, watchDeep } from "@vueuse/core";
 import { useConfig } from "../composables/config";
+import Control from "./comp/Control.vue";
 const svg = ref<SVGSVGElement | null>(null);
 const { width, height } = useElementBounding(svg);
 const { r, t } = useConfig();
@@ -45,31 +46,27 @@ watchDeep(
 
 <template>
   <div>
-    <h2 class="text-lg font-bold mb-4">基本不和谐度曲线</h2>
-    <div class="flex gap-8 mb-4 items-start">
-      <div class="grid grid-cols-[4em_8em] gap-1 max-w-lg">
-        <span>参数r</span>
-        <input v-model.number="r" type="number" class="input" />
-        <input
-          type="range"
-          min="5"
-          max="100"
-          step="5"
-          v-model.number="r"
-          class="grid-col-span-2"
-        />
-        <span>参数t</span>
-        <input v-model.number="t" type="number" class="input" />
-        <input
-          type="range"
-          min="10"
-          max="200"
-          step="10"
-          v-model.number="t"
-          class="grid-col-span-2"
-        />
+    <h2 class="text-lg font-bold mb-2">基本不和谐度曲线</h2>
+    <div class="flex gap-8 mb-4 items-center">
+      <div class="flex gap-2 flex-col max-w-lg">
+        <Control
+          label="参数r"
+          v-model:value="r"
+          :min="5"
+          :max="100"
+          :step="5"
+          :options="[5, 10, 25, 50, 100]"
+        ></Control>
+        <Control
+          label="参数t"
+          v-model:value="t"
+          :min="10"
+          :max="200"
+          :step="100"
+          :options="[10, 25, 50, 100, 200]"
+        ></Control>
       </div>
-      <svg ref="svg" class="w-32 h-32 border shadow box-content" />
+      <svg ref="svg" class="w-32 h-full border shadow box-content" />
     </div>
   </div>
 </template>

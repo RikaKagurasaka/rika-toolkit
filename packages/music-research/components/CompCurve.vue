@@ -30,12 +30,21 @@ const {
   volume,
   xAxisTickType,
 } = useConfig();
-const { snappedMouseCent, addedNotes, play, stop, savedChords, data, mode } =
-  usePlot({
-    svg,
-  });
+const {
+  snappedMouseCent,
+  addedNotes,
+  play,
+  stop,
+  savedChords,
+  data,
+  mode,
+  isError,
+} = usePlot({
+  svg,
+});
 
 function myPlay() {
+  if (isError.value) return;
   switch (mode.value) {
     case "interval":
     case "chord":
@@ -50,7 +59,7 @@ function myPlay() {
 
 <template>
   <div>
-    <h2 class="text-lg font-bold mb-4">复合不和谐度曲线</h2>
+    <h2 class="text-lg font-bold">复合不和谐度曲线</h2>
     <div class="flex gap-8 mb-4 items-end">
       <Control
         label="平均律"
@@ -163,7 +172,8 @@ function myPlay() {
     </div>
     <svg
       ref="svg"
-      class="w-full h-80 border cursor-crosshair"
+      class="w-full h-80 border"
+      :class="isError ? 'cursor-not-allowed' : 'cursor-crosshair'"
       @mousedown="myPlay()"
       @mouseup="stop()"
       @mouseleave="stop()"

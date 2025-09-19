@@ -99,7 +99,6 @@ export async function playNotes(notes: { x: number, y: number, w: number }[], ma
     const synth = new Tone.PolySynth(Tone.Synth).toDestination();
     notes.forEach((note, i) => {
         const noteName = NOTES[coords2level(note.x, note.y, mainNoteLevel)]?.split('/')[0] + `${note.w + 4}`;
-        console.log(noteName);
         synth.triggerAttackRelease(noteName, "2n", now + i * 0.05);
     });
 }

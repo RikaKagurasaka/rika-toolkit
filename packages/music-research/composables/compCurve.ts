@@ -29,6 +29,7 @@ export function usePlot({
 
     const { elementX, elementY, isOutside, elementWidth, elementHeight } = useMouseInElement(svg as MaybeElementRef);
     const { pressed } = useMousePressed();
+    const isError = ref(false);
     if (!gpuCompute) {
         throw new Error('WebGPU 不支持或初始化失败');
     }
@@ -163,6 +164,23 @@ export function usePlot({
     }) {
         const s = d3.select(svg);
         const [xx, yy] = [toValue(x), toValue(y)];
+        if (toValue(minY) == toValue(maxY)) {
+            s.selectAll("*").remove();
+            s.append("text")
+                .attr("x", toValue(elementWidth) / 2)
+                .attr("y", toValue(elementHeight) / 2)
+                .attr("class", "error-text")
+                .attr("text-anchor", "middle")
+                .attr("alignment-baseline", "middle")
+                .attr("fill", "red")
+                .attr("font-size", 12)
+                .text("配置错误");
+            isError.value = true;
+            return
+        } else {
+            isError.value = false;
+            s.selectAll("text.error-text").remove();
+        }
 
         // ============================================
         function plotGrid() {
@@ -218,7 +236,6 @@ export function usePlot({
 
                 }
             })();
-            console.log(ticks);
 
             g.selectAll<SVGTextElement, { x: number; name: string }>("text.grid-text")
                 .data(ticks)
@@ -467,7 +484,7 @@ export function usePlot({
     return {
         edo, maxX, snapping, snappedMouseCent, mousePressed: computed(() => pressed.value && !isOutside.value),
         addedNotes, savedChords, mainFrequency, data, valleys: snaps,
-        mode, volume,
+        mode, volume, isError,
         play, stop
     };
 }
