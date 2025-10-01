@@ -62,7 +62,7 @@ watchDeep(
           v-model:value="t"
           :min="10"
           :max="200"
-          :step="100"
+          :step="5"
           :options="[10, 25, 50, 100, 200]"
         ></Control>
       </div>
